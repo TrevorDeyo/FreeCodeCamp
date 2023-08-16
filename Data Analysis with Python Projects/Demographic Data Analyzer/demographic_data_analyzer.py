@@ -12,28 +12,26 @@ def calculate_demographic_data(print_data=True):
     average_age_men = round(df[df['sex'] == 'Male']['age'].mean(), 1)
 
     # What is the percentage of people who have a Bachelor's degree?
+    total = len(df)
     bach = df['education'] == 'Bachelors'
     bach_total = df.loc[bach].value_counts().sum()
-    percentage_bachelors = round((bach_total / len(df)) * 100, 1)
+    percentage_bachelors = round((bach_total / total) * 100, 1)
+
 
     # What percentage of people with advanced education (`Bachelors`, `Masters`, or `Doctorate`) make more than 50K?
     # What percentage of people without advanced education make more than 50K?
 
     # with and without `Bachelors`, `Masters`, or `Doctorate`
-    mast = df['education'] == 'Masters'
-    doc = df['education'] == "Doctorate"
-    high_ed = bach | mast | doc
+    higher_education = df[df["education"].isin(["Bachelors", "Masters", "Doctorate"])]
+    lower_education = df[~df["education"].isin(["Bachelors", "Masters", "Doctorate"])]
 
-    low_ed = (df['education'] != 'Bachelors') & (df['education'] != 'Masters') & (df['education'] != 'Doctorate')
+    # percentage with salary >50K
+    non_percentage_higher = len(higher_education[higher_education.salary == ">50K"])
 
-    # high edu rich percentage with salary >50K
-    her = df.loc[high_ed & (df['salary'] == '>50k')].value_counts().sum()
-    het = df.loc[bach | mast | doc].value_counts().sum()
+    higher_education_rich = round(non_percentage_higher / len(higher_education) * 100, 1)
 
-    higher_education_rich = round(her * 100 / het, 1)
-
-    # low edu rich percentage with salary >50K
-    lower_education_rich = None
+    non_percentage_lower = len(lower_education[lower_education.salary == ">50K"])
+    lower_education_rich = round(non_percentage_lower / len(lower_education) * 100, 1)
 
     # What is the minimum number of hours a person works per week (hours-per-week feature)?
     min_work_hours = None
