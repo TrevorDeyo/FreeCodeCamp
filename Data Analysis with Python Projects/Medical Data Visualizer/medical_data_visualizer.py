@@ -7,13 +7,13 @@ import numpy as np
 df = pd.read_csv(r"C:\Users\tdeyo\Desktop\Code\FreeCodeCamp\Data Analysis with Python Projects\Medical Data Visualizer\medical_examination.csv")
 
 # get height in meters then squared
-df['height_in_meters'] = df['height'] / 100
+HIM = df['height'] / 100
 
 # calculate BMI
-df['BMI'] = df['weight'] / (df['height_in_meters'] ** 2)
+BMI = df['weight'] / (HIM ** 2)
 
 # Add 'overweight' column
-df['overweight'] = (df['BMI'] > 25).astype(int)
+df['overweight'] = (BMI > 25).astype(int)
 
 # Normalize data by making 0 always good and 1 always bad. If the value of 'cholesterol' or 'gluc' is 1, make the value 0. If the value is more than 1, make the value 1.
 df['cholesterol'] = df['cholesterol'].apply(lambda x: 0 if x == 1 else 1)
@@ -50,18 +50,17 @@ def draw_heat_map():
         (df['weight'] <= df['weight'].quantile(0.975))]
 
     # Calculate the correlation matrix
-    corr = None
+    corr = df_heat.corr(method='pearson')
 
     # Generate a mask for the upper triangle
-    mask = None
-
+    mask = np.triu(corr)
 
 
     # Set up the matplotlib figure
-    fig, ax = None
+    fig, ax = plt.subplots(figsize=(12, 12))
 
     # Draw the heatmap with 'sns.heatmap()'
-
+    sns.heatmap(corr, linewidths=1, annot=True, mask=mask, fmt='.1f', center=0.08, cbar_kws= {"shrink":0.5})
 
 
     # Do not modify the next two lines
