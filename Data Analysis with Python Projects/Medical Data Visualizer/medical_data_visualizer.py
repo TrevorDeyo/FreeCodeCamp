@@ -6,14 +6,14 @@ import numpy as np
 # Import data
 df = pd.read_csv(r"C:\Users\tdeyo\Desktop\Code\FreeCodeCamp\Data Analysis with Python Projects\Medical Data Visualizer\medical_examination.csv")
 
-# get height in meters then squared
-HIM = df['height'] / 100
+# get height in meters
+height_in_meters = df['height'] / 100
 
 # calculate BMI
-BMI = df['weight'] / (HIM ** 2)
+bmi = df['weight'] / (height_in_meters ** 2)
 
 # Add 'overweight' column
-df['overweight'] = (BMI > 25).astype(int)
+df['overweight'] = (bmi > 25).astype(int)
 
 # Normalize data by making 0 always good and 1 always bad. If the value of 'cholesterol' or 'gluc' is 1, make the value 0. If the value is more than 1, make the value 1.
 df['cholesterol'] = df['cholesterol'].apply(lambda x: 0 if x == 1 else 1)
@@ -60,8 +60,7 @@ def draw_heat_map():
     fig, ax = plt.subplots(figsize=(12, 12))
 
     # Draw the heatmap with 'sns.heatmap()'
-    sns.heatmap(corr, linewidths=1, annot=True, mask=mask, fmt='.1f', center=0.08, cbar_kws= {"shrink":0.5})
-
+    ax = sns.heatmap(corr, vmin=0, vmax=0.25, linewidths=.5, square=True, annot=True, mask=mask, fmt='.1f', cbar_kws= {"shrink":0.5})
 
     # Do not modify the next two lines
     fig.savefig('heatmap.png')
