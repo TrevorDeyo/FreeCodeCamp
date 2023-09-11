@@ -5,10 +5,15 @@ from pandas.plotting import register_matplotlib_converters
 register_matplotlib_converters()
 
 # Import data (Make sure to parse dates. Consider setting index column to 'date'.)
-df = None
+df = pd.read_csv(r'C:\Users\tdeyo\Desktop\Code\FreeCodeCamp\Data Analysis with Python Projects\Page View Time Series Visualizer\fcc-forum-pageviews.csv')
+df.set_index('date', inplace=True)
 
 # Clean data
-df = None
+# Calculate the quantiles for the top and bottom 2.5% of the data
+top_quantile = df['value'].quantile(0.975)
+bottom_quantile = df['value'].quantile(0.025)
+
+filtered_df = df[(df['value'] > bottom_quantile) & (df['value'] < top_quantile)]
 
 
 def draw_line_plot():
