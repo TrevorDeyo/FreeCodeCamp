@@ -18,10 +18,10 @@ filtered_df = df[(df['value'] > bottom_quantile) & (df['value'] < top_quantile)]
 
 def draw_line_plot():
     # Draw line plot
+    fig, ax = plt.subplots()
+    ax.plot(filtered_df)
 
-
-
-
+    ax.set(xlabel = 'Date', ylabel = 'Page Views', title = 'Daily freeCodeCamp Forum Page Views 5/2016-12/2019')
 
     # Save image and return fig (don't change this part)
     fig.savefig('line_plot.png')
@@ -32,10 +32,6 @@ def draw_bar_plot():
     df_bar = None
 
     # Draw bar plot
-
-
-
-
 
     # Save image and return fig (don't change this part)
     fig.savefig('bar_plot.png')
@@ -49,10 +45,6 @@ def draw_box_plot():
     df_box['month'] = [d.strftime('%b') for d in df_box.date]
 
     # Draw box plots (using Seaborn)
-
-
-
-
 
     # Save image and return fig (don't change this part)
     fig.savefig('box_plot.png')
