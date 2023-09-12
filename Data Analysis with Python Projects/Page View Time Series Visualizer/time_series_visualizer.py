@@ -15,13 +15,13 @@ df.set_index('date', inplace=True)
 top_quantile = df['value'].quantile(0.975)
 bottom_quantile = df['value'].quantile(0.025)
 
-filtered_df = df[(df['value'] > bottom_quantile) & (df['value'] < top_quantile)]
+df = df[(df['value'] > bottom_quantile) & (df['value'] < top_quantile)]
 
 def draw_line_plot():
 
     # Draw line plot
     fig, ax = plt.subplots(figsize=(32, 10))
-    ax.plot(filtered_df.index, filtered_df['value'], color = 'red', linewidth=2.5)
+    ax.plot(df.index, df['value'], color = 'red', linewidth=2.5)
     
     ax.set_xlabel('Date', fontsize = 20)
     ax.set_ylabel('Page Views', fontsize = 20)
@@ -36,7 +36,7 @@ def draw_line_plot():
 
 def draw_bar_plot():
     # Copy and modify data for monthly bar plot
-    df_bar = filtered_df.copy()
+    df_bar = df.copy()
 
     # Extract year and month from the index
     df_bar['year'] = df_bar.index.year
@@ -86,6 +86,22 @@ def draw_box_plot():
     df_box['month'] = [d.strftime('%b') for d in df_box.date]
 
     # Draw box plots (using Seaborn)
+    df_box['month_num'] = df_box['date'].dt.month
+    df_box = df_box.sort_values('month_num')
+
+    fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(28.8,10.8))
+    axes[0] = sns.boxplot(x=df_box['year'], y=df_box['value'], ax = axes[0])
+    axes[1] = sns.boxplot(x = df_box['month'],y = df_box['value'], ax=axes[1], order = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov', 'Dec'])
+
+    axes[0].set_title('Year-wise Box Plot (Trend)', fontsize=20)
+    axes[0].set_xlabel('Year', fontsize=20)
+    axes[0].set_ylabel('Page Views', fontsize=20)
+
+    axes[1].set_title('Month-wise Box Plot (Seasonality)', fontsize=20)
+    axes[1].set_xlabel('Month', fontsize=20)
+    axes[1].set_ylabel('Page Views', fontsize=20)
+
+    sns.set(font_scale=1.5)
 
     # Save image and return fig (don't change this part)
     fig.savefig('box_plot.png')
